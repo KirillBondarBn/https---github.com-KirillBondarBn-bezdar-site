@@ -1,0 +1,14 @@
+.task{
+    background-color: aliceblue;
+    margin-left: 100px;
+    margin-right: 100px;
+    height: 400px;
+}
+
+.menu{
+    text-align: center;
+}
+
+img{
+    width: 300px;
+}
