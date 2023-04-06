@@ -67,16 +67,14 @@ document.getElementById("k-means").addEventListener("click", function() {
     k_means();
 });
 
-
 function k_means() {
-    console.log(field.objects.length);
     let clusters = new Array(clusterCount);
 
     let temp = new Array(field.objects.length).fill(0);
     let index;
     for (let i = 0; i < clusterCount; i++) {
         index = parseInt(Math.random()*field.objects.length);
-        while (temp[index != 0]) {
+        while (temp[index] != 0) {
             index = parseInt(Math.random()*field.objects.length);
         }
         temp[index] = 1;
@@ -84,10 +82,9 @@ function k_means() {
 
         let cluster = new Cluster(new Position(position.x, position.y), i, colors[i]);
         clusters[i] = cluster;
-
     }
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 10000; i++) {
         for (let object of field.objects) {
             let minDistance = 100000;
             for (let cluster of clusters) {
@@ -118,6 +115,6 @@ function k_means() {
             cluster.position.y = parseInt(sumY / count);
         }
     }
-    
+
     field.display();
 }

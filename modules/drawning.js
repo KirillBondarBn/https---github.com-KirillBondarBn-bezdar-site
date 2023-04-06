@@ -68,7 +68,7 @@ export class Field {
             if (this.getPointsDistance(cursorPosition, objectPosition) <= this.objects[i].radius) {
                 this.objects = this.objects.slice(0, i).concat(this.objects.slice(i + 1));
                 break;
-            }
+            } // TODO
         }
     }
 

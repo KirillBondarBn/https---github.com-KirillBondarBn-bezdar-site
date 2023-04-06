@@ -28,19 +28,19 @@
                     <div class="modeButtons">
                         <button class="settingsButton" type="button" id="add">Draw</button>
                         <button class="settingsButton" type="button" id="delete">Remove</button>
-                        <button class="settingsButton" type="button" id="info" onclick="setInformationMode()">Info</button>
+                        <button class="settingsButton" type="button" id="info">Info</button>
                     </div>
                     
                     <button class="settingsButton" type="button" id="k-means">k-means</button>
-                    <button class="settingsButton" type="button" id="c-means" onclick="k_means()">c-means</button>
-                    <button class="settingsButton" type="button" id="сomparison" onclick="k_means()">Comparison</button>
-                    <button class="settingsButton" type="button" id="clear" onclick="clearCanvas()">Clear points</button>
+                    <button class="settingsButton" type="button" id="c-means">c-means</button>
+                    <button class="settingsButton" type="button" id="сomparison">Comparison</button>
+                    <button class="settingsButton" type="button" id="clear">Clear points</button>
 
                     <label id="labelRange">Point radius: 10</label>
-                    <input type="range" min="1" max="20" id="radiusRange" value="10" oninput="this.nextElementSibling.value = this.value">
+                    <input type="range" min="1" max="20" id="radiusRange" value="10">
 
                     <label id="labelClusterCount">Clusters count: 2</label>
-                    <input type="range" min="2" max="10" id="clusterCount" value="2" oninput="this.nextElementSibling.value = this.value">
+                    <input type="range" min="2" max="10" id="clusterCount" value="2">
                 </div>
             </div>
         </div>
