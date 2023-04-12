@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" href="../styles/genetic.css">
+    </head>
+
+    <body>
+        <div class="interface">
+            <div id="settings">
+                <label id="user_mode">user mode: create barrier</label>
+                <button id="start">set start cell</button>
+                <button id="finish">set finish cell</button>
+                <button id="create">create barrier</button>
+                <button id="remove">remove barrier</button>
+                <button id="clear_way">clear way</button>
+
+                <label>Select field size</label>
+                <input id="field_size" type="number">
+                <button id="generate">generate</button>
+                <button id="solve">solve</button>
+            </div>
+            <div id="div_field">
+                <canvas id="canvas_field"></canvas>
+            </div>
+        </div>
+
+        <script src="../scripts/Astar.js" type="module"></script>
+    </body>
+</html>
