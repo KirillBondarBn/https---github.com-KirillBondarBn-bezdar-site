@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Maze</title>
+        <link rel="stylesheet" href="../styles/Astar.css">
+    </head>
+
+    <body>
+        <div class="interface">
+            <div id="settings">
+                <label id="label_maze_size">Maze size: 31</label>
+                <input id="set_maze_size" type="range" min="11" max="101" step="2" value="31">
+                <button class="settingsButton" id="generate">Generate</button>
+                <button class="settingsButton" id="start">Set start</button>
+                <button class="settingsButton" id="finish">Set finish</button>
+                <button class="settingsButton" id="create">Set barrier</button>
+                <button class="settingsButton" id="remove">Remove barrier</button>
+                <button class="settingsButton" id="solve">solve</button>
+                <button class="settingsButton" id="clear_way">Clear solution</button>
+            </div>
+            <div id="canvas_field">
+                <canvas id="maze"></canvas>
+            </div>
+        </div>
+        <canvas id="maze_field"></canvas>
+        <script src="../scripts/Astar.js" type="module"></script>
+    </body>
+</html>

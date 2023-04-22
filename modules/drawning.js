@@ -48,6 +48,24 @@ export class Field {
         return Math.sqrt(Math.pow(positionA.x - positionB.x, 2) + Math.pow(positionA.y - positionB.y, 2));
     }
 
+    getObjectByPosition(position) {
+        for (let object of this.objects) {
+            if (object.radius != null) {
+                // todo
+            }
+            else if(object.size != null) {
+                if (position.x - object.position.x >= 0 && position.x - object.position.x <= object.size &&
+                    position.y - object.position.y >= 0 && position.y - object.position.y <= object.size) {
+                        return object;
+                    }
+            }
+        }
+    }
+
+    appendObject(object) {
+        this.objects.push(object);
+    }
+
     createObject (cursorPosition, typeOfObject, size, color, id) { // size - radius(circle) \ width(square)
         let position = cursorPosition;
         let object;
@@ -68,7 +86,7 @@ export class Field {
             if (this.getPointsDistance(cursorPosition, objectPosition) <= this.objects[i].radius) {
                 this.objects = this.objects.slice(0, i).concat(this.objects.slice(i + 1));
                 break;
-            }
+            } // TODO
         }
     }
 

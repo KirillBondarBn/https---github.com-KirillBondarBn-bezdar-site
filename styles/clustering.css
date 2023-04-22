@@ -1,0 +1,73 @@
+body {
+    background-color: #393939;
+    color: #bbbbbb;
+    font-family: sans-serif;
+    font-weight: 600;
+}
+
+.interface {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-rows: 50px 1fr;
+    height: 98vh;
+}
+
+#stateMode {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#drawning_field {
+    grid-row: 2;
+}
+
+#interaction {
+    display: grid;
+    grid-template-rows: 10px;
+    grid-row: 1;
+}
+
+#clustering_field {
+    background-color: #242424;
+}
+
+#settings {
+    display: grid;
+    grid-gap: 0px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1.5fr;
+    grid-template-rows: 50px;
+}
+
+.settingsButton:hover {
+    background-color:#434343;
+    transition: 0.3s;
+}
+
+.settingsButton {
+    color: #bbbbbb;
+    border: none;
+    background-color: #393939;
+    font-family: sans-serif;
+    font-weight: 600;
+}
+
+#ranges {
+    display: grid;
+    grid-gap:12px;
+    grid-template-rows: 1fr 1fr;
+}
+
+#pointRadius {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-row: 1;
+}
+
+#clusterCountDiv {  
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-row: 2;
+}
+
+
+

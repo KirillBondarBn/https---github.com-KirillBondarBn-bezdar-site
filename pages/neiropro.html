@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Нейронка</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+
+    <div style="margin-left: 20px; margin-right: 20px;">
+        <p class="header"> Нейронная сеть</p>
+        <p class="subtitle"> Нейронная сеть симулирует работу нейронов человеческого мозга. В нашем случае распознает написованые числа.</p>
+        <hr class="line">
+    </div>
+
+<div id="menu">
+    <div>
+        <button id="run" class="hidden">Run</button>
+        <button id="add" class="hidden">Add</button>
+        <label class="hidden">
+            <input type="number" step="1" min="0" max="9" value="1" id="answerInput">
+        </label>
+        <button id="save" class="hidden">Save</button>
+        <button id="saveK" class="hidden">SaveK</button>
+        <button id="get" class="hidden">Get</button>
+        <button id="clear">Очистить</button>
+        <input type="file" value="..." id="getter" class="hidden">
+        <button id="iter">Получить Ответ</button>
+    </div>
+    <div>
+        <h4 >Я думаю это</h4>
+        <h4 id="answer">1</h4>
+    </div>
+</div>
+
+<div id="content">
+    <canvas width="700" height="700" id="drawer"></canvas>
+
+</div>
+
+<script src="../scripts/utils.js"></script>
+<script src="../scripts/weightsNeiro.js"></script>
+<script src="../scripts/mainNeiro.js"></script>
+
+</body>
+</html>

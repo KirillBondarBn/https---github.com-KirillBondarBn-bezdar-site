@@ -1,0 +1,132 @@
+body {
+    background-color: #393939;
+}
+
+#line {
+    color: #393939;
+    size: 4px;
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    font-size: 35px;
+    color: #bbbbbb;
+}
+
+.subtitle {
+    display: flex;
+    justify-content: center;
+    font-size: 16px;
+    text-align: center;
+    color: #bbbbbb;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+#menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0;
+}
+
+div.item {
+    /* vertical-align: top; */
+    display: inline-block;
+    text-align: center;
+    /* width: auto; */
+    
+    max-height: 40%;
+    max-width: 40%;
+    padding: 30px;
+    
+    padding-left: 3%;
+    padding-right: 3%;
+    color: #bbbbbb;
+
+}
+img {
+    width: auto;
+    max-width: 60%;
+    height: auto;
+    max-height: 60%;
+    background-color: rgb(37, 18, 160);
+
+}
+.imgButton {
+    text-align: center;
+    
+}
+a.text {
+    text-decoration: none;
+    color: #bbbbbb;
+}
+
+.hidden {
+    display: none;
+}
+
+input[type=number],
+input[type=file] {
+    font-size: 16px;
+    
+    color: #bbbbbb;
+
+    border: 0;
+    border-radius: 5px;
+    box-shadow: 0 0 1px black;
+    text-shadow: 0 0 3px black;
+
+    padding: 5px 10px;
+    margin: 3px 5px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    display: inline;
+}
+
+
+html,
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+
+    background-size: cover;
+
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: #bbbbbb;
+
+    margin: 0;
+    width: 100%;
+    height: 100%;
+
+    user-select: none;
+}
+
+button:hover {
+    background-color:#434343;
+    transition: 0.3s;
+}
+
+button {
+    margin: 3px 5px 3px;
+    color: #bbbbbb;
+    border: none;
+    background-color: #393939;
+    font-family: sans-serif;
+    font-weight: 600;
+}
