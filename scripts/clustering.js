@@ -9,12 +9,23 @@ class Cluster {
 }
 
 let field = new Field("clustering_field", "drawning_field");
-const colors = ["#f08080", "#a0c4ff", "#60d394", "#ffd97d", "#001427", "#f46036", "#0f7173", "#6c5b7b", "#a01a7d", "#d5ac4e"];
 let userMode = "Draw";
 let pointRadius = 10;
 let clusterCount = 2;
 
+const colors = ["#f08080", "#a0c4ff", "#60d394", "#ffd97d", "#A5A5A5", "#f46036", "#0f7173", "#6c5b7b", "#a01a7d", "#d5ac4e"];
+const clusterCountRange = document.getElementById("clusterCount");
+const labelClusterCount = document.getElementById("labelClusterCount");
+const userModeLabel = document.getElementById("stateMode");
+const setDrawModeButton = document.getElementById("draw");
+const setRemoveModeButton = document.getElementById("remove");
+const radiusRange = document.getElementById("radiusRange");
+const labelRange = document.getElementById("labelRange");
+const kMeansButton = document.getElementById("k-means");
+const clearFieldButton = document.getElementById("clear");
+
 function setUserMode(value) {
+    userModeLabel.innerText = "Active mode: " + value;
     userMode = value;
 }
 
@@ -23,51 +34,41 @@ function setPointRadius(value) {
 }
 
 function setClusterCount(value) {
-    clusterCount = value;
+    if (value <= field.objects.length) {
+        clusterCount = value;
+    } 
+    else {
+        clusterCountRange.value = field.objects.length;
+    }
+    labelClusterCount.innerText = "Clusters count: " + clusterCountRange.value;
 }
 
 function click(event) {
     let cursorPosition = field.getUserClickPosition(event);
 
     if (userMode == "Draw") {
-        field.createObject(cursorPosition, "Circle", pointRadius, "Black", 1);
+        field.createObject(cursorPosition, "Circle", pointRadius, "White", 1);
     }
     else if (userMode == "Remove") {
         field.removeObject(cursorPosition);
+        setClusterCount(clusterCountRange.value);
+    }
+    else if (userMode == "Clear") {
+        field.clear();
+        setClusterCount(clusterCountRange.value);
     }
 
     field.display();
 }
 
-field.canvas.addEventListener("mousedown", function(event) {
-    click(event)
-})
-
-document.getElementById("add").addEventListener("click", function() {
-    document.getElementById("stateMode").innerText = "Active mode: Draw";
-    setUserMode("Draw")
-})
-
-document.getElementById("delete").addEventListener("click", function() {
-    document.getElementById("stateMode").innerText = "Active mode: Remove";
-    setUserMode("Remove")
-})
-
-document.getElementById("radiusRange").addEventListener("change", function(event) {
-    document.getElementById("labelRange").innerText = "Point radius: " + document.getElementById("radiusRange").value;
-    setPointRadius(parseInt(document.getElementById("radiusRange").value))
-})
-
-document.getElementById("clusterCount").addEventListener("change", function() {
-    document.getElementById("labelClusterCount").innerText = "Clusters count: " + document.getElementById("clusterCount").value;
-    setClusterCount(parseInt(document.getElementById("clusterCount").value));
-})
-
-document.getElementById("k-means").addEventListener("click", function() {
-    k_means();
-});
-
 function k_means() {
+    console.log(clusterCountRange.value, field.objects.length)
+    if (clusterCountRange.value > field.objects.length) {
+        console.log("lol")
+        alert("Set more points");
+        return;
+    }
+
     let clusters = new Array(clusterCount);
 
     let temp = new Array(field.objects.length).fill(0);
@@ -118,3 +119,35 @@ function k_means() {
 
     field.display();
 }
+
+// All event listeners
+field.canvas.addEventListener("mousedown", function(event) {
+    click(event)
+})
+
+setDrawModeButton.addEventListener("click", function() {
+    setUserMode("Draw")
+})
+
+setRemoveModeButton.addEventListener("click", function() {
+    setUserMode("Remove")
+})
+
+radiusRange.addEventListener("change", function(event) {
+    labelRange.innerText = "Point radius: " + radiusRange.value;
+    setPointRadius(parseInt(radiusRange.value))
+})
+
+clusterCountRange.addEventListener("change", function() {
+    setClusterCount(parseInt(clusterCountRange.value));
+})
+
+kMeansButton.addEventListener("click", function() {
+    k_means();
+});
+
+clearFieldButton.addEventListener("click", function() {
+    field.clear();
+    clusterCountRange.value = 2;
+    clusterCount = 2;
+})

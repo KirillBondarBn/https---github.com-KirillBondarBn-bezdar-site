@@ -1,5 +1,7 @@
 import { Field, Position, Square } from "../modules/drawning.js";
 
+const field = new Field("maze", "canvas_field");
+
 class Cell {
     constructor (object, type, state, index) {
         this.object = object;
@@ -9,17 +11,13 @@ class Cell {
     }
 }
 
-function wayVisualisation(way) {
-    setTimeout(function() {
-        way.pop().object.color = "pink";
-        field.display();
-        if (way.length > 0) {
-            wayVisualisation(way);
-        }
-    }, 15);
+class Tractor {
+    constructor () {
+        this.x = 0;
+        this.y = 0;
+    }
 }
-// async function
-// await delay
+
 class Graph {
     constructor (vertices) {
         this.adjacencyList = new Array(vertices);
@@ -47,7 +45,7 @@ class Graph {
         this.adjacencyList[vertex].push(cell);
     }
 
-    BFS() {
+    async BFS() {
         let queue = [];
         queue.push(startCell);
 
@@ -63,6 +61,9 @@ class Graph {
                 if (distance[adjacencyVertex.index] == -1) {
                     queue.push(adjacencyVertex);
                     distance[adjacencyVertex.index] = distance[currentVertex.index] + 1;
+                    currentVertex.object.color = "gray";
+                    field.display();
+                    await delay(100);
                     previousVertex[adjacencyVertex.index] = currentVertex;
                 }
             }
@@ -81,19 +82,264 @@ class Graph {
             wayVisualisation(optimalRoute);
         }
         else {
-            console.log("NO WAY");
+            alert("NO WAY");
         }
     }
 }
 
-let field = new Field("canvas_field", "div_field");
-field.canvas.height = 600;
-field.canvas.width = 600;
+async function wayVisualisation(way) {
+    while (way) {
+        way.pop().object.color = "pink";
+        field.display();
+        await delay(100);
+    }
+}
 
+const maze = document.getElementById("maze");
+const context = maze.getContext('2d');
+
+const WALL_COLOR = "black";
+const FREE_COLOR = "white";
+
+let mazeSize = parseInt(document.getElementById("set_maze_size").value);
+let cellSize = field.canvas.width / mazeSize;
+let userMode = "Create";
 let startCell;
 let finishCell;
 
-let userMode = "Create";
+let mazeMatrix = createMatrix(mazeSize, mazeSize);
+
+let images = new Array();
+
+const TRACTORS_COUNT = 1000;
+let tractors = [];
+
+function initTractors() {
+    for (let i = 0; i < TRACTORS_COUNT; i++) {
+        tractors.push(new Tractor);
+    }
+}
+
+mazeMatrix[0][0] = true;
+generation()
+async function generation() {
+    tractors = [];
+    initTractors();
+    let cnt = 0;
+    while (!isValid()) {
+        cnt++;
+        for (let tractor of tractors) {
+            moveTractor(tractor);
+        }
+        const temp = cloneArray(mazeMatrix);
+        images.push(temp);
+    }
+
+    cellSize = field.canvas.width / mazeSize; 
+    field.clear();
+    for (let i = 0; i < mazeSize; i++) {
+        for (let j = 0; j < mazeSize; j++) {
+            let color = "black";
+            if (mazeMatrix[i][j]) {
+                color = "white";
+            }
+            field.appendObject(new Square(new Position(i * cellSize, j * cellSize), cellSize, color, [i, j]))
+        }
+    }
+
+    field.display();
+}
+
+function moveTractor(tractor) {
+    let directions = [];
+
+    if (tractor.x > 0) {
+        directions.push([-2, 0]);
+    }
+    if (tractor.x < mazeSize - 1) {
+        directions.push([2, 0]);
+    }
+    if (tractor.y > 0) {
+        directions.push([0, -2]);
+    }
+    if (tractor.y < mazeSize - 1) {
+        directions.push([0, 2]);
+    }
+
+    const [dx, dy] = getRandomItem(directions);
+
+    tractor.x += dx;
+    tractor.y += dy;
+
+    if (!mazeMatrix[tractor.x][tractor.y]) {
+        mazeMatrix[tractor.x][tractor.y] = true;
+        mazeMatrix[tractor.x - dx / 2][tractor.y - dy / 2] = true;
+    }
+}
+
+function delay(timeout) {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+}
+
+function isValid() {
+    for (let y = 0; y < mazeSize; y += 2) {
+        for (let x = 0; x < mazeSize; x += 2) {
+            if (!mazeMatrix[y][x]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+maze.height = mazeSize * cellSize;
+maze.width = mazeSize * cellSize;
+
+function getRandomItem(array) {
+    const index = Math.floor(Math.random() * array.length);
+    return array[index];
+}
+
+function display() {
+    
+    for (let y = 0; y < mazeSize; y++) {
+        for (let x = 0; x < mazeSize; x++) {
+            let color;
+            if (mazeMatrix[x][y]) {
+                color = FREE_COLOR;
+            }
+            else {
+                color = WALL_COLOR;
+            }
+            context.beginPath();
+            context.strokeStyle = color;
+            context.fillStyle = color;
+            context.rect(x * cellSize, y * cellSize, cellSize, cellSize);
+            context.fill();
+            context.stroke();
+        }
+    }
+}
+
+function createMatrix(rows, columns) {
+    const matrix = [];
+
+    for (let  y = 0; y < rows; y++) {
+        const row = [];
+        
+        for (let x = 0; x < columns; x++) {
+            row.push(false);
+        }
+        matrix.push(row);
+    }
+    return matrix;
+}
+
+function clearWay() {
+    for (let object of field.objects) {
+        if (object.color != "white" && object.color != "black") {
+            object.color = "white";
+        }
+    }
+    field.display();
+}
+
+document.getElementById("clear_way").addEventListener("click", function() {
+    clearWay()
+})
+
+field.canvas.addEventListener("mousedown", function(event) {
+    click(event);
+})
+
+document.getElementById("set_maze_size").addEventListener("input", function() {
+    document.getElementById("label_maze_size").innerText = "Maze size: " + document.getElementById("set_maze_size").value;
+    mazeSize = parseInt(document.getElementById("set_maze_size").value);
+})
+
+document.getElementById("start").addEventListener("click", function() {
+    userMode = "Start";
+})
+
+document.getElementById("finish").addEventListener("click", function() {
+    userMode = "Finish";
+})
+
+document.getElementById("create").addEventListener("click", function() {
+    userMode = "Create"
+})
+
+document.getElementById("remove").addEventListener("click", function() {
+    userMode = "Remove"
+})
+
+document.getElementById("generate").addEventListener("click", function() {
+    //mazeSize = document.getElementById("set_maze_size").value;
+    mazeMatrix = createMatrix(mazeSize, mazeSize);
+    mazeMatrix[0][0] = true;
+    generation();
+})
+
+async function visualisation() {
+    images = new Set(images);
+    for (let i of images) {
+        mazeMatrix = i;
+        display();
+        await delay(10);
+    }
+}
+
+function cloneArray(array) {
+    let newArray = [];
+    for (let i of array) {
+        let temp = Array.from(i);
+        newArray.push(temp);
+    }
+    return newArray;
+}
+
+
+var astar = {
+    search: function(grid, start, finish) {   
+        
+    },
+    
+    // correct
+    heuristic: function(positionA, positionB) {
+        var distanceA = Math.abs (positionB.x - positionA.x);
+        var distanceB = Math.abs (positionB.y - positionA.y);
+        return distanceA + distanceB;
+    },
+
+    // correct
+    neighbors: function(grid, node) {
+        var nodes = [];
+        var x = node.position.x;
+        var y = node.position.y;
+    
+        if(x - 1 >= 0) {
+            if (grid[x-1][y] && !grid[x-1][y].isWall) {
+                nodes.push(grid[x-1][y]);
+            }
+        }
+        if (x + 1 < grid.length) {
+            if(grid[x+1][y] && !grid[x+1][y].isWall) {
+                nodes.push(grid[x+1][y]);
+            }
+        }
+        if (y - 1 >= 0) {
+            if(grid[x][y-1] && !grid[x][y-1].isWall) {
+                nodes.push(grid[x][y-1]);
+            }
+        }
+        if (y + 1 < grid.length) {
+            if(grid[x][y+1] && !grid[x][y+1].isWall) {
+                nodes.push(grid[x][y+1]);
+            }
+        }
+        return nodes;
+    }
+};
 
 function click(event) {
     let position = field.getUserClickPosition(event);
@@ -125,48 +371,7 @@ function click(event) {
     field.display();
 }
 
-field.canvas.addEventListener("mousedown", function(event) {
-    click(event);
-})
-
-document.getElementById("start").addEventListener("click", function() {
-    userMode = "Start";
-})
-
-document.getElementById("finish").addEventListener("click", function() {
-    userMode = "Finish";
-})
-
-document.getElementById("create").addEventListener("click", function() {
-    userMode = "Create"
-})
-
-document.getElementById("remove").addEventListener("click", function() {
-    userMode = "Remove"
-})
-
-document.getElementById("generate").addEventListener("click", function() {
-    generateLabirint(document.getElementById("field_size").value)
-})
-
-document.getElementById("solve").addEventListener("click", function() {
-    solve(parseInt(document.getElementById("field_size").value))
-})
-
-document.getElementById("clear_way").addEventListener("click", function() {
-    clearWay()
-})
-
-function clearWay() {
-    for (let object of field.objects) {
-        if (object.color == "pink") {
-            object.color = "white";
-        }
-    }
-    field.display();
-}
-
-function solve(mazeSize) {
+function solve() {
     let graph = new Graph(field.objects.length);
     for (let i = 0; i < field.objects.length; i++) {
         if (i >= mazeSize) {
@@ -203,114 +408,8 @@ function solve(mazeSize) {
     field.display();
 }
 
-function generateLabirint(fieldSize) {
-    field.clear();
-    let cellSize = parseInt(field.canvas.offsetWidth / fieldSize);
-    let fieldMatrix = new Array(fieldSize);
-    
-    let i = 0;
-    let j = 0;
-    for (let x = 0; x <= field.canvas.offsetWidth - cellSize; x += cellSize) {
-        fieldMatrix[i] = new Array(fieldSize);
-        j = 0;
-        for (let y = 0; y <= field.canvas.offsetWidth - cellSize; y += cellSize) {
-            let cell = new Square(new Position(x, y), cellSize, "black", [i, j]);
-            field.appendObject(cell);
-            fieldMatrix[i][j] = cell;
-            j++
-        }
-        i++;
-    }
+document.getElementById("solve").addEventListener("click", function() {
+    solve();
+})
 
-
-    let x = parseInt(Math.random() * (fieldSize - 1) / 2) * 2;
-    let y = parseInt(Math.random() * (fieldSize - 1) / 2) * 2;
-
-    fieldMatrix[x][y].color = "white";
-    let check = new Array();
-
-    if (y - 2 >= 0) {
-        check.push(fieldMatrix[x][y - 2]);
-    }
-    if (y + 2 < fieldSize) {
-        check.push(fieldMatrix[x][y + 2]);
-    }
-    if (x - 2 >= 0) {
-        check.push(fieldMatrix[x - 2][y]);
-    }
-    if (x + 2 < fieldSize) {
-        check.push(fieldMatrix[x + 2][y]);
-    }
-    let lol = 0;
-    while (check.length > 0 && lol < 100) {
-        let index = Math.floor(Math.random() * (check.length - 1));
-        let cell = check[index];
-        x = cell.id[0];
-        y = cell.id[1];
-        cell.color = "white";
-        check.splice(index, 1);
-
-        let directions = ["up", "down", "right", "left"];
-        while (directions.length > 0) {
-            let directionIndex = Math.floor(Math.random() * (directions.length - 1));
-            switch (directions[directionIndex]) {
-                case "up":
-                    if (y - 2 >= 0) {
-                        if (fieldMatrix[x][y - 2].color == "white") {
-                            fieldMatrix[x][y - 1].color = "white";
-                            directions = [];
-                        }
-                    }
-                    break;
-                case "down":
-                    if (y + 2 < fieldSize) {
-                        if (fieldMatrix[x][y + 2].color == "white") {
-                            fieldMatrix[x][y + 1].color = "white";
-                            directions = [];
-                        }
-                    }
-                    break;
-                case "right":
-                    if (x - 2 >= 0) {
-                        if (fieldMatrix[x - 2][y].color == "white") {
-                            fieldMatrix[x - 1][y].color = "white";
-                            directions = [];
-                        }
-                    }
-                    break;
-                case "left":
-                    if (x + 2 < fieldSize) {
-                        if (fieldMatrix[x + 2][y].color == "white") {
-                            fieldMatrix[x + 1][y].color = "white";
-                            directions = [];
-                        }
-                    }
-                    break;
-            }
-            directions.splice(directionIndex, 1);
-        }
-        if (y - 2 >= 0) {
-            if (fieldMatrix[x][y - 2].color == "black") {
-                check.push(fieldMatrix[x][y - 2]);
-            }
-        }
-        if (y + 2 < fieldSize) {
-            if (fieldMatrix[x][y + 2].color == "black") {
-                check.push(fieldMatrix[x][y + 2]);
-            }
-        }
-        if (x - 2 >= 0) {
-            if (fieldMatrix[x - 2][y].color == "black") {
-                check.push(fieldMatrix[x - 2][y]);
-            }
-        }
-        if (x + 2 < fieldSize) {
-            if (fieldMatrix[x + 2][y].color == "black") {
-                check.push(fieldMatrix[x + 2][y]);
-            }
-        }
-        lol++;
-    }
-
-    field.display();
-}
+field.display();

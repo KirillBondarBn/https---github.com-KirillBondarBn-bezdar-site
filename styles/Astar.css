@@ -1,0 +1,43 @@
+body {
+    background-color: #393939;
+    color: #bbbbbb;
+    font-family: sans-serif;
+    font-weight: 600;
+}
+
+.interface {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-rows: 50px 1fr;
+    height: 98vh;
+}
+
+#canvas_field {
+    background-color: #242424;
+}
+
+#settings {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;
+}
+
+.settingsButton:hover {
+    background-color:#434343;
+    transition: 0.3s;
+}
+
+.settingsButton {
+    color: #bbbbbb;
+    border: none;
+    background-color: #393939;
+    font-family: sans-serif;
+    font-weight: 600;
+}
+
+#label_maze_size {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}

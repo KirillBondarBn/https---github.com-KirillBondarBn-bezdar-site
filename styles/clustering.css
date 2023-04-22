@@ -1,63 +1,73 @@
 body {
-    background-color: #D8E2DC;
+    background-color: #393939;
+    color: #bbbbbb;
     font-family: sans-serif;
     font-weight: 600;
 }
 
 .interface {
     display: grid;
-    grid-gap: 15px;
-    grid-template-columns: 1fr 350px;
+    grid-gap: 10px;
+    grid-template-rows: 50px 1fr;
     height: 98vh;
 }
 
+#stateMode {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #drawning_field {
-    grid-column: 1;
-    grid-row: 1;
+    grid-row: 2;
 }
 
 #interaction {
     display: grid;
-    grid-gap: 15px;
-    grid-template-rows: 280px 1fr;
-    grid-column: 2;
+    grid-template-rows: 10px;
     grid-row: 1;
 }
 
 #clustering_field {
-    background-color: #edede9;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-left: 0px;
-    margin-right: 0px;
+    background-color: #242424;
 }
 
 #settings {
     display: grid;
-    grid-gap: 15px;
-    grid-template-rows: 30px 1fr 1fr 1fr 1fr 1fr 30px 1fr 30px 1fr;
+    grid-gap: 0px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1.5fr;
+    grid-template-rows: 50px;
+}
+
+.settingsButton:hover {
+    background-color:#434343;
+    transition: 0.3s;
 }
 
 .settingsButton {
-    border-radius: 10px;
-    background-color: #d6ccc2;
+    color: #bbbbbb;
+    border: none;
+    background-color: #393939;
     font-family: sans-serif;
     font-weight: 600;
 }
 
-.modeButtons {
+#ranges {
     display: grid;
-    grid-gap: 5px;
+    grid-gap:12px;
+    grid-template-rows: 1fr 1fr;
 }
 
-#add {
+#pointRadius {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     grid-row: 1;
 }
 
-#delete {
-    grid-row: 1;
+#clusterCountDiv {  
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-row: 2;
 }
 
-#info {
-    grid-row: 1;
-}
+
+
